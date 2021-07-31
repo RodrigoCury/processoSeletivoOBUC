@@ -1,0 +1,96 @@
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;1,100;1,200;1,300;1,400;1,500&display=swap'); /* Work Sans */
+
+.header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	background-image: linear-gradient(90deg, #001b2b, #001b2bee, #001b2b88, #00000000), url("/static/admin-small.png");
+	background-size: 100% 175px;
+	background-position: bottom;
+	height: 100px;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	z-index: 2;
+}
+
+.header-title {
+	margin: 0 10px;
+	color: #fff;
+	font-style: italic;
+	font-size: 1.75em;
+	font-family: 'Work Sans';
+}
+
+.header-buttons {
+	display: flex;
+	flex-direction: row;
+	margin-right: 20px;
+}
+
+.header-buttons > button {
+	background: none;
+	border: none;
+}
+
+.home-btn {
+	display: block;
+	border-right: solid white 1px !important;
+}
+
+.home-btn > a {
+	display: block;
+}
+
+.account-btn {
+	padding-left: 5px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	text-decoration: none;
+}
+
+.user-svg {
+	height: 100%;
+	display: flex;
+	align-items: center;
+}
+
+.user-text {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: left;
+}
+
+.user-text > .user {
+	color: #fff;
+	font-size: 1.5em;
+	font-family: "Work-Sans";
+}
+
+.user-text > .user-title {
+	color: #fff;
+	font-size: .8em;
+	font-family: "Work-Sans";
+}
+
+.home-btn:hover .feather-home, .account-btn:hover .feather-user {
+	stroke-width: 2;
+}
+
+.home-btn:active .feather-home, .account-btn:active .feather-user {
+	stroke-width: 1.25;
+}
+
+.account-btn:hover .user-text, .account-btn:hover .user-title {
+	text-shadow: 0px 0px 1px rgba(255, 255, 255, 1);
+}
+
+.account-btn:active .user-text, .account-btn:active .user-title {
+	text-shadow: 0 0 0 rgba(255, 255, 255, 0);
+}
