@@ -13,11 +13,81 @@
     <link rel="manifest" href="/static/manifest.json">
 
     <!-- Icons -->
+    <link rel="icon" href="/static/favicon.ico">
 
     <!-- Title -->
     <title>OBUC Test</title>
 </head>
 
 <body>
+    <header class='header'>
+        <h1 class='header-title'>Controle de Locais de Trabalho</h1>
 
+        <div class='header-buttons'>
+
+            <button class='home-btn'><a href="#"></a></button>
+            <a class='account-btn' href="#">
+                <div class='user-svg'></div>
+                <div class='user-text'>
+                    <h3 class='user'>Usuário</h3>
+                    <p class='user-title'>Administrador</p>
+                </div>
+            </a>
+        </div>
+    </header>
+
+    <div class='main-container'>
+        <nav class='navbar'>
+            <div class="nav-title-wrapper">
+                <div class='nav-gear'></div>
+                <h2 class='nav-title'>Administração</h2>
+            </div>
+
+            <ul class='navbar-ul'>
+                <!-- Adicionados Iterativamente por um código mais legível -->
+            </ul>
+        </nav>
+
+        <div class='container'>
+            <div class="main-wrapper">
+                <h2 class='task-title'>Locais de Trabalho</h2>
+                <hr>
+                <div class="task-wrapper">
+                    <form class="task-form">
+                        <div class='task-input'>
+                            <label for="predios">Prédios</label>
+                            <select name="predios" id="predios">
+                                <option value='Prédio 1'>Prédio 1</option>
+                                <option value='Prédio 2'>Prédio 2</option>
+                                <option value='Prédio 3'>Prédio 3</option>
+                                <option value='Prédio 4'>Prédio 4</option>
+                                <option value='Prédio 5'>Prédio 5</option>
+                            </select>
+                        </div>
+                        <div class='task-input'>
+                            <label for="locais">Local de Trabalho</label>
+                            <input type="text" name="locais" id="locais">
+                        </div>
+                        <div class='task-submit-div'>
+                            <p>&nbsp;</p>
+                            <button type="submit" class='task-submit'>+</button>
+                        </div>
+                    </form>
+
+                    <table class='task-table'>
+                        <thead class='table-head'>
+                            <tr>
+                                <th class='head head-predio'>Prédio</th>
+                                <th class='head head-locais'>Locais de Trabalho</th>
+                                <th class='head head-vazio'></th>
+                            </tr>
+                        </thead>
+                        <tbody class='table-body'>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
