@@ -1,4 +1,4 @@
-const sorttable = require('sorttable/sorttable.js') // Biblioteca para fajustar a ordem dos items de uma tabela
+const sorttable = require('sorttable/sorttable.js') // Biblioteca para ajustar a ordem dos items de uma tabela
 
 class DOM {
     /**
@@ -19,7 +19,6 @@ class DOM {
         this.setupSessionItems()
         this.setupForm()
         this.setupHelperFunctions()
-        sorttable.init()
     }
 
     setupElements() {
@@ -178,6 +177,9 @@ class DOM {
         tdEditDelete.lastChild.setAttribute("id", `delete-${id}`);
         tdEditDelete.lastChild.onclick = event => this.excluir(event) // Adiciona Event Listener de Exclusão
 
+        tdPredio.ondblclick = event => this.editar(event)
+        tdLocal.ondblclick = event => this.editar(event)
+
         tr.appendChild(tdPredio)
         tr.appendChild(tdLocal)
         tr.appendChild(tdEditDelete)
@@ -223,6 +225,9 @@ class DOM {
 
         tdLocais.innerHTML = seletorLocalClone.outerHTML
 
+        // Ajusta o Foco para Edição Automaticamente para melhor usabilidade
+        tdLocais.childNodes[0].focus()
+
         // // Acessa o botão de edição para adicionar eventListener
         const confirmBtn = tdEditDelete.childNodes[0]
         confirmBtn.setAttribute("id", `confirm-${id}`)
@@ -240,17 +245,20 @@ class DOM {
         tdPredio.childNodes[0].onkeydown = event => {
             if (event.key === "Enter") {
                 this.confirmarEdicao(id)
+            } else if (event.key === "ESC" || event.key === "Escape") {
+                this.cancelaEdicao(id)
             }
         }
 
         tdLocais.childNodes[0].onkeydown = event => {
             if (event.key === "Enter") {
                 this.confirmarEdicao(id)
+            } else if (event.key === "ESC" || event.key === "Escape") {
+                this.cancelaEdicao(id)
             }
         }
 
         cancelBtn.onclick = event => {
-            // Checa se o elemento clicado foi o Block do SVG ou o Path interno do SVG e retorna o id de maneira correta
             this.cancelaEdicao(id)
         }
     }
@@ -264,8 +272,6 @@ class DOM {
         const predioSelecionado = [...seletorPredio.childNodes].filter(opt => opt.selected)[0].value
         const local = inputLocal.value
 
-        const tdEditDelete = this.$(`#local-${id}`).childNodes[2]
-
         try {
             // Retorna Erro caso necessário
             this.sessionStorage.editarLocal(id, predioSelecionado, local)
@@ -278,7 +284,8 @@ class DOM {
 
         } catch (error) { // Lida Com os erros sem quebrar a aplicação
             inputLocal.classList.add("invalid-text")
-            inputLocal.placeholder = error.message
+            inputLocal.placeholder = `${error.message}: "${inputLocal.value}"`
+            inputLocal.value = ""
         }
     }
 
