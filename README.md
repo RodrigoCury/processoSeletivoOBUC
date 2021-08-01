@@ -5,6 +5,7 @@
 Desenvolvido usando 
 - [Webpack] - Para um deploy Simplificado
 - [Sorttable] - Para ordenação de Tabelas
+- [Feather-Icons] - Biblioteca de ícones
 - HTML
 - CSS
 - Vanilla Javascript ES7
@@ -22,5 +23,6 @@ npm run dev
 
 Para acessar a página em produção acesse [AQUI](https://prova-tecnica-obuc.vercel.app/)
 
+[Feather-Icons]: <https://feathericons.com/>
 [webpack]: <https://webpack.js.org/>
 [Sorttable]: <https://www.npmjs.com/package/sorttable/v/1.0.2>
