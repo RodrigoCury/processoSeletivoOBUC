@@ -1,3 +1,5 @@
+const sorttable = require('sorttable/sorttable.js') // Biblioteca para fajustar a ordem dos items de uma tabela
+
 class DOM {
     /**
      * Constructor
@@ -17,6 +19,7 @@ class DOM {
         this.setupSessionItems()
         this.setupForm()
         this.setupHelperFunctions()
+        sorttable.init()
     }
 
     setupElements() {
