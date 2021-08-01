@@ -71,6 +71,10 @@
     box-shadow: 0 0 0 1px #DDD;
 }
 
+table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
+    content: " \25B4 \25BE" 
+}
+
 .head-predio, .head-locais, .head-vazio  {
     padding: 10px;
     background: #001b2b;
