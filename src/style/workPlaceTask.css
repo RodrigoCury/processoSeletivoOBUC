@@ -1,7 +1,7 @@
 .main-wrapper {
 	margin: 30px;
 	padding: 15px;
-	height: calc(100% - 100px);
+	min-height: calc(100% - 100px);
 }
 
 .task-title {
@@ -12,7 +12,7 @@
     padding: 15px;
     border: 1px solid #EEEEEE;
     background: #FFF;
-    height: calc(100% - 18px - 20px);
+    min-height: calc(100% - 18px - 20px);
 }
 
 .task-form {
