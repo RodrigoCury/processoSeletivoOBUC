@@ -22,7 +22,6 @@ class SessionStorage {
         })
     }
 
-
     editarLocal(id, predio, local) {
         // Acessar o arquivo no session Storage
         const item = JSON.parse(sessionStorage.getItem(id))

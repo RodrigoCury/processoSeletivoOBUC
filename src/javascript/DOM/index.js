@@ -1,4 +1,4 @@
-const sorttable = require('sorttable/sorttable.js') // Biblioteca para ajustar a ordem dos items de uma tabela
+require('sorttable/sorttable.js') // Biblioteca para ajustar a ordem dos items de uma tabela
 
 class DOM {
     /**
@@ -13,15 +13,15 @@ class DOM {
 
         this.icons = icons
 
-        this.setupElements()
-        this.setupIcons()
-        this.setupNavList()
-        this.setupSessionItems()
+        this.setupElementos()
+        this.setupIcones()
+        this.setupNavBar()
+        this.setupItensDaSessao()
         this.setupForm()
-        this.setupHelperFunctions()
+        this.setupHelpers()
     }
 
-    setupElements() {
+    setupElementos() {
         // Header
         this.homeBtn = this.$('.home-btn')
         this.userSvg = this.$('.user-svg')
@@ -39,19 +39,22 @@ class DOM {
         this.tbody = this.$(".table-body")
     }
 
-    setupIcons() {
+    setupIcones() {
         // Adicionar Icones
         this.homeBtn.innerHTML = this.icons.homeIcon
         this.userSvg.innerHTML = this.icons.userIcon
         this.navTitleIcon.innerHTML = this.icons.gearIcon
     }
 
-    setupNavList() {
+    setupNavBar() {
         // Lista de objetos com informações para os botões
-        const listBtns = [
+        const listaBtns = [
             {
+                // Texto que aparecerá na Tag
                 title: 'Administradores',
+                // Link
                 href: "#",
+                // Se é a página que está sendo acessada: facilmente substituível por um regex da window.location.origin
                 selected: false,
             }, {
                 title: 'Áreas',
@@ -76,7 +79,7 @@ class DOM {
             }
         ]
 
-        listBtns.forEach(item => {
+        listaBtns.forEach(item => {
 
             // Cria Tag
             const a = document.createElement('a')
@@ -101,7 +104,7 @@ class DOM {
         })
     }
 
-    setupSessionItems() {
+    setupItensDaSessao() {
         this.sessionStorage.arrLocaisTrabalho.forEach(obj => this.adicionarItemNaLista(obj))
     }
 
@@ -142,7 +145,7 @@ class DOM {
 
         } catch (error) { // Se Erro for Levantado Lidará com o Erro
             this.workplaceInput.classList.add("invalid-text")
-            this.workplaceInput.placeholder = error.message
+            this.workplaceInput.placeholder = `${error.message}: "${inputLocal.value}"`
         }
 
         this.workplaceInput.value = ""
@@ -169,17 +172,26 @@ class DOM {
         tdLocal.classList.add("td-local")
         tdLocal.innerHTML = local
 
+        // Adiciona Icones de Edição e exclusão
         tdEditDelete.classList.add("td-EditDelete")
         tdEditDelete.innerHTML += this.icons.editIcon
         tdEditDelete.innerHTML += this.icons.trashIcon
-        tdEditDelete.firstChild.setAttribute("id", `edit-${id}`);
-        tdEditDelete.firstChild.onclick = event => this.editar(event) // Adiciona Event Listener de Edição
-        tdEditDelete.lastChild.setAttribute("id", `delete-${id}`);
-        tdEditDelete.lastChild.onclick = event => this.excluir(event) // Adiciona Event Listener de Exclusão
 
+        const editBtn = tdEditDelete.firstChild
+        const deleteBtn = tdEditDelete.lastChild
+
+        // Adiciona Id's e EventListeners
+        editBtn.setAttribute("id", `edit-${id}`);
+        editBtn.onclick = event => this.editar(event) // Adiciona Event Listener de Edição
+
+        deleteBtn.lastChild.setAttribute("id", `delete-${id}`);
+        deleteBtn.lastChild.onclick = event => this.excluir(event) // Adiciona Event Listener de Exclusão
+
+        // Eventlistener de Click Duplo para melhor usabilidade
         tdPredio.ondblclick = event => this.editar(event)
         tdLocal.ondblclick = event => this.editar(event)
 
+        // Adiciona as tags na Tabela
         tr.appendChild(tdPredio)
         tr.appendChild(tdLocal)
         tr.appendChild(tdEditDelete)
@@ -188,7 +200,7 @@ class DOM {
     }
 
     editar(event) {
-        // Checa se o elemento clicado foi o Blobk do SVG ou o Path interno do SVG e retorna o id de maneira correta
+        // Checa se o elemento clicado foi o Block do SVG ou o Path interno do SVG e retorna o id de maneira correta
         const id = this.helpers.getElementId(event)
 
         // Acessa os elementos para alterar
@@ -318,36 +330,36 @@ class DOM {
         }
     }
 
-    setupHelperFunctions() {
-        this.helpers = {
-            adicionaBotoesDeEdicaoEDelecao: id => {
-                const tdEditDelete = this.$(`#local-${id}`).childNodes[2]
+    setupHelpers() {
+        this.helpers = {}
+        this.helpers.adicionaBotoesDeEdicaoEDelecao = id => {
+            const tdEditDelete = this.$(`#local-${id}`).childNodes[2]
 
-                tdEditDelete.innerHTML = this.icons.editIcon
-                tdEditDelete.innerHTML += this.icons.trashIcon
+            tdEditDelete.innerHTML = this.icons.editIcon
+            tdEditDelete.innerHTML += this.icons.trashIcon
 
-                // Retorna para os ícones de Edição e exclusão
-                const editBtn = tdEditDelete.childNodes[0]
-                editBtn.setAttribute("id", `edit-${id}`)
+            // Retorna para os ícones de Edição e exclusão
+            const editBtn = tdEditDelete.childNodes[0]
+            editBtn.setAttribute("id", `edit-${id}`)
 
-                const deleteBtn = tdEditDelete.childNodes[1]
-                deleteBtn.setAttribute("id", `delete-${id}`)
+            const deleteBtn = tdEditDelete.childNodes[1]
+            deleteBtn.setAttribute("id", `delete-${id}`)
 
-                // Seta novamente os eventListeners para editar e excluir
-                editBtn.onclick = event => this.editar(event) // Adiciona Event Listener de Edição
+            // Seta novamente os eventListeners para editar e excluir
+            editBtn.onclick = event => this.editar(event) // Adiciona Event Listener de Edição
 
-                deleteBtn.onclick = event => this.excluir(event) // Adiciona Event Listener de Edição
-            },
-            getElementId: event => {
-                // Expressão regular para encontrar apenas os numeros no ID
-                const idRegex = /\d+/g
-
-                // Checa se o elemento clicado foi o Blobk do SVG ou o Path interno do SVG e retorna o id de maneira correta
-                const id = event.target.nodeName === "svg" ? idRegex.exec(event.target.id).join('') : idRegex.exec(event.target.parentNode.id).join('')
-
-                return id
-            }
+            deleteBtn.onclick = event => this.excluir(event) // Adiciona Event Listener de Edição
         }
+        this.helpers.getElementId = event => {
+            // Expressão regular para encontrar apenas os numeros no ID
+            const idRegex = /\d+/g
+
+            // Checa se o elemento clicado foi o Blobk do SVG ou o Path interno do SVG e retorna o id de maneira correta
+            const id = event.target.nodeName === "svg" ? idRegex.exec(event.target.id).join('') : idRegex.exec(event.target.parentNode.id).join('')
+
+            return id
+        }
+
     }
 }
 
