@@ -79,6 +79,16 @@ class SessionStorage {
 
     }
 
+    acessarPorId(id) {
+        const obj = JSON.parse(sessionStorage.getItem(id))
+
+        if (!obj) {
+            throw new Error("Não encontrado o ID")
+        }
+
+        return obj
+    }
+
     // Função que cria ID's como um DB SQL em que ele não retorna ID já usado, menos o ultimo ID pq isso necessitaria de um log // Good enough!
     idSetter() {
         if (!sessionStorage.length) {
@@ -108,7 +118,6 @@ class SessionStorage {
         return
     }
 
-
     checarPorDuplicatas({ id, local, predio }) {
         return Object.values(sessionStorage).find(value => {
             // Parse para Object
@@ -130,6 +139,7 @@ class SessionStorage {
             return false
         })
     }
+
 }
 
 module.exports = SessionStorage
