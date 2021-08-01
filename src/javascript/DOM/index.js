@@ -16,6 +16,7 @@ class DOM {
         this.setupNavList()
         this.setupSessionItems()
         this.setupForm()
+        this.setupHelperFunctions()
     }
 
     setupElements() {
@@ -108,7 +109,6 @@ class DOM {
 
         // onEnter
         this.workplaceInput.addEventListener('keydown', event => {
-            console.log(event);
             if (event.key === "Enter") {
                 this.finalizarForm(event)
             }
@@ -170,9 +170,9 @@ class DOM {
         tdEditDelete.classList.add("td-EditDelete")
         tdEditDelete.innerHTML += this.icons.editIcon
         tdEditDelete.innerHTML += this.icons.trashIcon
-        tdEditDelete.firstChild.setAttribute("id", id);
+        tdEditDelete.firstChild.setAttribute("id", `edit-${id}`);
         tdEditDelete.firstChild.onclick = event => this.editar(event) // Adiciona Event Listener de Edição
-        tdEditDelete.lastChild.setAttribute("id", id);
+        tdEditDelete.lastChild.setAttribute("id", `delete-${id}`);
         tdEditDelete.lastChild.onclick = event => this.excluir(event) // Adiciona Event Listener de Exclusão
 
         tr.appendChild(tdPredio)
@@ -184,11 +184,12 @@ class DOM {
 
     editar(event) {
         // Checa se o elemento clicado foi o Blobk do SVG ou o Path interno do SVG e retorna o id de maneira correta
-        const id = event.target.nodeName === "svg" ? event.target.id : event.target.parentNode.id
+        const id = this.helpers.getElementId(event)
 
         // Acessa os elementos para alterar
         const tdPredio = this.$(`#local-${id}`).childNodes[0]
         const tdLocais = this.$(`#local-${id}`).childNodes[1]
+        const tdEditDelete = this.$(`#local-${id}`).childNodes[2]
 
         // Salva o valor anterior para o value do input
         const valorAnterior = tdLocais.innerHTML
@@ -205,9 +206,13 @@ class DOM {
         seletorLocalClone.setAttribute("id", `locais-${id}-text`)
         seletorLocalClone.setAttribute("value", valorAnterior)
 
+        // Troca os icones de Editar e deletar para Confirmar e cancelar respectivamente
+        tdEditDelete.innerHTML = this.icons.checkIcon
+        tdEditDelete.innerHTML += this.icons.xIcon
+
         /*
          * Usando os ids como ferramenta de acesso resultará em falhas de segurança, 
-         * mas por questão de tempo não vou implementar uma solução para isso
+         * mas, por questão de tempo não vou implementar uma solução para isso
          */
 
         // Troca o inner HTML para os inputs
@@ -215,26 +220,35 @@ class DOM {
 
         tdLocais.innerHTML = seletorLocalClone.outerHTML
 
-        // Acessa o botão de edição para adicionar eventListener
-        const editBtn = document.getElementById(id.toString())
+        // // Acessa o botão de edição para adicionar eventListener
+        const confirmBtn = tdEditDelete.childNodes[0]
+        confirmBtn.setAttribute("id", `confirm-${id}`)
+
+        const cancelBtn = tdEditDelete.childNodes[1]
+        cancelBtn.setAttribute("id", `cancel-${id}`)
+
 
         // Setando os EventListeners
-        editBtn.onclick = event => {
+        confirmBtn.onclick = event => {
             // Checa se o elemento clicado foi o Block do SVG ou o Path interno do SVG e retorna o id de maneira correta
-            const id = event.target.nodeName === "svg" ? event.target.id : event.target.parentNode.id
             this.confirmarEdicao(id)
         }
+
         tdPredio.childNodes[0].onkeydown = event => {
-            const id = event.target.parentNode.parentNode.lastChild.childNodes[0].id
             if (event.key === "Enter") {
                 this.confirmarEdicao(id)
             }
         }
+
         tdLocais.childNodes[0].onkeydown = event => {
-            const id = event.target.parentNode.parentNode.lastChild.childNodes[0].id
             if (event.key === "Enter") {
                 this.confirmarEdicao(id)
             }
+        }
+
+        cancelBtn.onclick = event => {
+            // Checa se o elemento clicado foi o Block do SVG ou o Path interno do SVG e retorna o id de maneira correta
+            this.cancelaEdicao(id)
         }
     }
 
@@ -247,8 +261,7 @@ class DOM {
         const predioSelecionado = [...seletorPredio.childNodes].filter(opt => opt.selected)[0].value
         const local = inputLocal.value
 
-        // Acessa o botão pra setar o eventListener
-        const editBtn = document.getElementById(id.toString())
+        const tdEditDelete = this.$(`#local-${id}`).childNodes[2]
 
         try {
             // Retorna Erro caso necessário
@@ -258,25 +271,73 @@ class DOM {
             seletorPredio.parentNode.innerHTML = predioSelecionado
             inputLocal.parentNode.innerHTML = local
 
-            // Setar o Event Listener
-            editBtn.onclick = event => this.editar(event)
+            this.helpers.adicionaBotoesDeEdicaoEDelecao(id)
 
         } catch (error) { // Lida Com os erros sem quebrar a aplicação
             inputLocal.classList.add("invalid-text")
             inputLocal.placeholder = error.message
         }
-
-
     }
 
     excluir(event) {
         // Checa se o elemento clicado foi o Block do SVG ou o Path interno do SVG e retorna o id de maneira correta
-        const id = event.target.nodeName === "svg" ? event.target.id : event.target.parentNode.id
+        const id = this.helpers.getElementId(event)
 
         this.sessionStorage.excluirLocal(id)
 
         const tr = this.$(`#local-${id}`)
         this.tbody.removeChild(tr)
+    }
+
+    cancelaEdicao(id) {
+        try {
+            const dados = this.sessionStorage.acessarPorId(id)
+
+            // Acessa os Inputs Corretos
+            const seletorPredio = this.$(`#locais-${id}-select`)
+            const inputLocal = this.$(`#locais-${id}-text`)
+
+            // Faz alterações na UI
+            seletorPredio.parentNode.innerHTML = dados.predio
+            inputLocal.parentNode.innerHTML = dados.local
+
+            this.helpers.adicionaBotoesDeEdicaoEDelecao(id)
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    setupHelperFunctions() {
+        this.helpers = {
+            adicionaBotoesDeEdicaoEDelecao: id => {
+                const tdEditDelete = this.$(`#local-${id}`).childNodes[2]
+
+                tdEditDelete.innerHTML = this.icons.editIcon
+                tdEditDelete.innerHTML += this.icons.trashIcon
+
+                // Retorna para os ícones de Edição e exclusão
+                const editBtn = tdEditDelete.childNodes[0]
+                editBtn.setAttribute("id", `edit-${id}`)
+
+                const deleteBtn = tdEditDelete.childNodes[1]
+                deleteBtn.setAttribute("id", `delete-${id}`)
+
+                // Seta novamente os eventListeners para editar e excluir
+                editBtn.onclick = event => this.editar(event) // Adiciona Event Listener de Edição
+
+                deleteBtn.onclick = event => this.excluir(event) // Adiciona Event Listener de Edição
+            },
+            getElementId: event => {
+                // Expressão regular para encontrar apenas os numeros no ID
+                const idRegex = /\d+/g
+
+                // Checa se o elemento clicado foi o Blobk do SVG ou o Path interno do SVG e retorna o id de maneira correta
+                const id = event.target.nodeName === "svg" ? idRegex.exec(event.target.id).join('') : idRegex.exec(event.target.parentNode.id).join('')
+
+                return id
+            }
+        }
     }
 }
 
