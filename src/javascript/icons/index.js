@@ -37,6 +37,18 @@ class Icons {
             color: "#001b2b",
             'stroke-width': 1.5,
         })
+
+        this.checkIcon = feather.icons.check.toSvg({
+            class: "check-feather",
+            color: "#001b2b",
+            'stroke-width': 1.5,
+        })
+
+        this.xIcon = feather.icons.x.toSvg({
+            class: "x-feather",
+            color: "#001b2b",
+            'stroke-width': 1.5,
+        })
     }
 }
 
