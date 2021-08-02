@@ -302,8 +302,14 @@ class DOM {
             this.helpers.adicionaBotoesDeEdicaoEDelecao(id)
 
         } catch (error) { // Lida Com os erros sem quebrar a aplicação
-            inputLocal.classList.add("invalid-text")
-            inputLocal.placeholder = `${error.message}: "${inputLocal.value}"`
+            if (error.idErro === 0 || error.idErro === 2) {
+                inputLocal.classList.add("invalid-text")
+                inputLocal.placeholder = `${error.message}: "${inputLocal.value}"`
+            } else {
+                seletorPredio.classList.add('invalid-text')
+                seletorPredio.childNodes[0].innerHTML = "Selecione uma Opção"
+                seletorPredio.childNodes[0].selected = true
+            }
             inputLocal.value = ""
         }
     }

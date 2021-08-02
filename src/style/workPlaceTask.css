@@ -116,11 +116,11 @@ table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sor
     font-size: 1em;
 }
 
-.edit-feather:hover, .trash-feather:hover, .x-trash:hover, .check-feather:hover {
+.edit-feather:hover, .trash-feather:hover, .x-feather:hover, .check-feather:hover {
     stroke-width: 2;
 }
 
-.edit-feather:active, .trash-feather:active, .x-trash:active, .check-feather:active{
+.edit-feather:active, .trash-feather:active, .x-feather:active, .check-feather:active{
     stroke-width: 1.25;
 }
 
