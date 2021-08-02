@@ -109,10 +109,14 @@ class SessionStorage {
     }
 
     validarLocal({ id, local, predio }) {
-        if (local === "") { // Input Vazia
-            throw new Error("Entrada Inválida")
+        if (local === "" || predio === "") { // Input Vazia
+            const erro = new Error("Entrada Inválida")
+            erro.idErro = local === "" ? 0 : 1
+            throw erro
         } else if (sessionStorage.length && this.checarPorDuplicatas({ id, local, predio }) !== undefined) { // Input ja existe no BD
-            throw new Error("Entrada Já Existe")
+            const erro = new Error("Entrada Já Existe")
+            erro.idErro = 2
+            throw erro
         }
         return
     }

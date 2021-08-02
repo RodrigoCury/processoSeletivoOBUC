@@ -142,10 +142,17 @@ class DOM {
             // Remove Mensagens de Erro
             this.workplaceInput.classList.remove("invalid-text")
             this.workplaceInput.placeholder = ""
+            this.seletorPredio.classList.remove("invalid-text")
+            this.seletorPredio.childNodes[0].innerHTML = ""
 
         } catch (error) { // Se Erro for Levantado Lidará com o Erro
-            this.workplaceInput.classList.add("invalid-text")
-            this.workplaceInput.placeholder = `${error.message}: "${inputLocal.value}"`
+            if (error.idErro === 0 || error.idErro === 2) {
+                this.workplaceInput.classList.add("invalid-text")
+                this.workplaceInput.placeholder = `${error.message}: "${inputLocal.value}"`
+            } else {
+                this.seletorPredio.classList.add('invalid-text')
+                this.seletorPredio.childNodes[0].innerHTML = "Selecione uma Opção"
+            }
         }
 
         this.workplaceInput.value = ""
